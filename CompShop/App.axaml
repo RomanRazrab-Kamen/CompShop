@@ -1,15 +1,32 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:CompShop.ViewModels"
+             xmlns:views="using:CompShop"
              x:Class="CompShop.App"
              xmlns:local="using:CompShop"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
-
+             
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <DataTemplate DataType="{x:Type vm:CatalogViewModel}">
+            <views:CatalogView />
+        </DataTemplate>
     </Application.DataTemplates>
   
-    <Application.Styles>
-        <FluentTheme />
+     <Application.Styles>
+        <FluentTheme>
+            <FluentTheme.Palettes>
+                <ColorPaletteResources x:Key="Dark" 
+                    Accent="#00009F" 
+                    RegionColor="#363636"  
+                    BaseHigh="#FFFFFF"
+                    BaseLow="#2C2C2E" />
+                
+                <ColorPaletteResources x:Key="Light" 
+                    Accent="#007AFF" 
+                    RegionColor="#FFFFFF"
+                    BaseHigh="#000000"
+                    BaseLow="#E5E5E5"/>
+            </FluentTheme.Palettes>
+        </FluentTheme>
     </Application.Styles>
 </Application>

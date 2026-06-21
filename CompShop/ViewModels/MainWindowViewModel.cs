@@ -1,7 +1,32 @@
-﻿namespace CompShop.ViewModels
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+
+namespace CompShop.ViewModels
 {
-    public partial class MainWindowViewModel : ViewModelBase
+    public class MainWindowViewModel : ViewModelBase
     {
-        public string Greeting { get; } = "Welcome to Avalonia!";
+        private ViewModelBase _currentPage = null!;
+
+        public ViewModelBase CurrentPage
+        {
+            get => _currentPage;
+            set
+            {
+                if (_currentPage != value)
+                {
+                    _currentPage = value;
+                    OnPropertyChanged(nameof(CurrentPage));
+                }
+            }
+        }
+
+        public MainWindowViewModel(CatalogViewModel catalogPage)
+        {
+            CurrentPage = catalogPage;
+        }
+        public void NavigateTo(ViewModelBase newPage)
+        {
+            CurrentPage = newPage;
+        }
     }
 }

@@ -1,0 +1,33 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:CompShop.ViewModels"
+        x:DataType="vm:MainWindowViewModel"
+        x:Class="CompShop.Windows.MainWindow"
+        Title="Компьютерный магазин — Главная панель" 
+        Width="1100" Height="650"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid RowDefinitions="Auto, *">
+        <Border Grid.Row="0" 
+                Background="{DynamicResource SystemControlTransientBackgroundBrush}" 
+                BorderBrush="{DynamicResource SystemControlBorderRasterBrush}" 
+                BorderThickness="0,0,0,1" 
+                Padding="20,12">
+            <Grid ColumnDefinitions="*, Auto">
+                <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center">
+                    <TextBlock Text="CompShop" FontSize="16" FontWeight="Bold"/>
+                </StackPanel>
+                
+                <Button Grid.Column="1" 
+                        Content="🌓 Сменить тему" 
+                        Padding="12,6" 
+                        FontSize="12"
+                        Click="ThemeToggleButton_Click"/> 
+            </Grid>
+        </Border>
+
+        <ContentControl Grid.Row="1" Content="{Binding CurrentPage}" />
+    </Grid>
+</Window>
