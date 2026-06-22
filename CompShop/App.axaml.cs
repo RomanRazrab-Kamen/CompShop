@@ -41,6 +41,7 @@ namespace CompShop
             serviceCollection.AddTransient<MainWindow>();         // Главное окно
 
             serviceCollection.AddTransient<CatalogViewModel>();   // Экран каталога для главного окна
+            serviceCollection.AddTransient<CatalogView>();
 
             Services = serviceCollection.BuildServiceProvider();
 

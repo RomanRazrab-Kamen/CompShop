@@ -43,7 +43,6 @@ namespace CompShop.ViewModels
 
         public ICommand LoginCommand { get; }
 
-        // Конструктор принимает только сервисы! Никаких DbContext и окон внутри.
         public AuthorizationViewModel(IAuthService authService, IWindowManagerService windowManager)
         {
             _authService = authService;
@@ -61,14 +60,12 @@ namespace CompShop.ViewModels
 
             try
             {
-                // Вызываем изолированный сервис авторизации
                 var employee = await _authService.ValidateUserAsync(LoginText, PasswordText);
 
                 if (employee != null)
                 {
                     ErrorMessage = string.Empty;
 
-                    // Переключаем окна через специализированный сервис
                     _windowManager.CloseCurrentAndOpen<MainWindow, MainWindowViewModel>();
                 }
                 else

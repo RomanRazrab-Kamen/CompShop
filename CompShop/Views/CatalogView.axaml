@@ -11,46 +11,55 @@
              x:Class="CompShop.CatalogView">
 
     <Grid ColumnDefinitions="250, *">
-        <!-- ЛЕВАЯ ПАНЕЛЬ: Фильтры и поиск -->
-        <Border Grid.Column="0" Background="#F5F5F7" BorderBrush="#E5E5E5" BorderThickness="0,0,1,0" Padding="15">
+        <Border Grid.Column="0"  Padding="15">
             <StackPanel Spacing="15">
-                <TextBlock Text="Фильтры" FontSize="18" FontWeight="Bold" Foreground="#333333"/>
+
+                <TextBlock Text="Фильтры" 
+                           FontSize="18" 
+                           FontWeight="Bold"/>
                 
-                <!-- Поиск -->
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Поиск по названию" FontSize="12" Foreground="#666666"/>
-                    <TextBox Text="{Binding SearchText, Mode=TwoWay}" PlaceholderText="Введите модель..."/>
+                    <TextBlock Text="Поиск по названию" 
+                               FontSize="12" />
+                    <TextBox Text="{Binding SearchText, Mode=TwoWay}" 
+                             PlaceholderText="Введите модель..."/>
                 </StackPanel>
 
-                <!-- Фильтр категорий -->
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Категория" FontSize="12" Foreground="#666666"/>
+                    <TextBlock Text="Категория"/>
                     <ComboBox ItemsSource="{Binding Categories}" 
                               SelectedItem="{Binding SelectedCategory}" 
                               HorizontalAlignment="Stretch"/>
                 </StackPanel>
 
-                <!-- Фильтр по цене -->
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Цена до (руб.)" FontSize="12" Foreground="#666666"/>
-                    <NumericUpDown Value="{Binding MaxPrice}" Minimum="0" Increment="1000"/>
+                    <TextBlock Text="Цена до (руб.)" 
+                               FontSize="12"/>
+                    <NumericUpDown Value="{Binding MaxPrice}" 
+                                   Minimum="0" 
+                                   Increment="1000"/>
                 </StackPanel>
 
-                <!-- Кнопка сброса -->
                 <Button Content="Сбросить фильтры" 
                         Command="{Binding ResetFiltersCommand}" 
                         HorizontalAlignment="Stretch" 
-                        HorizontalContentAlignment="Center"
-                        Background="#E0E0E0"/>
+                        HorizontalContentAlignment="Center"/>
             </StackPanel>
         </Border>
 
         <Grid Grid.Column="1" RowDefinitions="Auto, *" Margin="20">
-            <!-- Верхняя строка: Сортировка и статистика -->
-            <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
-                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
-                    <TextBlock Text="Найдено компонентов:" Foreground="#666666"/>
-                    <TextBlock Text="{Binding ItemsCount}" FontWeight="Bold"/>
+            <Grid Grid.Row="0" 
+                  ColumnDefinitions="*, Auto" 
+                  Margin="0,0,0,15">
+
+                <StackPanel Grid.Column="0" 
+                            Orientation="Horizontal" 
+                            VerticalAlignment="Center" 
+                            Spacing="10">
+
+                    <TextBlock Text="Найдено компонентов:"/>
+                    <TextBlock Text="{Binding ItemsCount}" 
+                               FontWeight="Bold"/>
                 </StackPanel>
                 
                 <ComboBox Grid.Column="1" Width="180" PlaceholderText="Сортировка">
@@ -70,33 +79,38 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate x:DataType="models:Component">
                             <Border Width="220" Height="280" Margin="10" Padding="12"
-                                    Background="White" CornerRadius="8" 
-                                    BorderBrush="#E5E5E5" BorderThickness="1">
+                                    CornerRadius="8" 
+                                    BorderThickness="1">
                                 <Grid RowDefinitions="*, Auto">
-                                    <!-- Верхняя часть: Название и характеристики -->
                                     <StackPanel Grid.Row="0" Spacing="8">
-                                        <Border Height="100" Background="#F9F9FA" CornerRadius="4">
-                                            <PathIcon Data="M2 20h20v-4H2v4zm2-3h2v2H4v-2zM2 4v4h20V4H2zm4 3H4V5h2v2zm-4 7h20v-4H2v4zm2-3h2v2H4v-2z" Width="32" Height="32" Foreground="#999999"/>
-                                        </Border>
                                         
-                                        <TextBlock Text="{Binding ComponentName}" FontWeight="Bold" FontSize="14" TextWrapping="Wrap" MaxLines="2"/>
-                                        <!-- Путь к названию категории. Измените на Name, если у вас плоская таблица -->
-                                        <TextBlock Text="{Binding Category.CategoryName}" FontSize="12" Foreground="#888888"/>
+                                        <TextBlock Text="{Binding ComponentName}" 
+                                                   FontWeight="Bold" 
+                                                   FontSize="14" 
+                                                   TextWrapping="Wrap" 
+                                                   MaxLines="2"/>
+
+                                        <TextBlock Text="{Binding Category.CategoryName}" 
+                                                   FontSize="12"/>
                                     </StackPanel>
 
-                                    <!-- Нижняя часть: Цена и кнопка -->
                                     <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Margin="0,10,0,0">
                                         <StackPanel Grid.Column="0" VerticalAlignment="Center">
                                             <TextBlock Text="{Binding Price, StringFormat='{}{0:N0} ₽'}" 
-                                                       FontSize="16" FontWeight="SemiBold" Foreground="#007AFF"/>
-                                            <TextBlock Text="В наличии" FontSize="11" Foreground="Green"/>
+                                                       FontSize="16" 
+                                                       FontWeight="SemiBold"/>
+                                            <TextBlock Text="В наличии" 
+                                                       FontSize="11"/>
                                         </StackPanel>
                                         
                                         <Button Grid.Column="1" Content="+" 
-                                                FontSize="16" FontWeight="Bold"
-                                                Background="#007AFF" Foreground="White" 
-                                                CornerRadius="20" Width="35" Height="35"
-                                                HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                                                FontSize="16" 
+                                                FontWeight="Bold"
+                                                CornerRadius="20" 
+                                                Width="35" 
+                                                Height="35"
+                                                HorizontalContentAlignment="Center" 
+                                                VerticalContentAlignment="Center"/>
                                     </Grid>
                                 </Grid>
                             </Border>

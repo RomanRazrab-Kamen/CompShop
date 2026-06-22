@@ -5,13 +5,12 @@
         x:Class="CompShop.Windows.AuthorizationWindow"
         x:DataType="vm:AuthorizationViewModel"
         Title="Авторизация — CompShop" 
-        Width="400" Height="500"
+        Width="400" Height="520"
         WindowStartupLocation="CenterScreen"
         CanResize="False">
 
    <Grid Background="{DynamicResource SystemRegionBrush}">
         
-        <!-- Карточка входа: рамка и фон подстраиваются сами -->
         <Border Background="{DynamicResource SystemControlTransientBackgroundBrush}" 
                 BorderBrush="{DynamicResource SystemControlBorderRasterBrush}"
                 BorderThickness="1"
@@ -22,31 +21,48 @@
                 HorizontalAlignment="Stretch">
             
             <StackPanel Spacing="20">
-                <!-- Логотип и Заголовок -->
-                <StackPanel HorizontalAlignment="Center" Spacing="8" Margin="0,0,0,10">
-                    <TextBlock Text="💻" FontSize="40" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Вход в систему" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Компьютерный магазин" FontSize="12" Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}" HorizontalAlignment="Center"/>
+                <StackPanel HorizontalAlignment="Center"
+                            Spacing="8"
+                            Margin="0,0,0,10">
+
+                    <TextBlock Text="Добро пожаловать!"
+                               FontSize="26"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"
+                               Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Вход в систему"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Center"/>
+
+                    <TextBlock Text="Компьютерный магазин"
+                               FontSize="12"
+                               Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"
+                               HorizontalAlignment="Center"/>
                 </StackPanel>
 
-                <!-- Поле Логина -->
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Логин (Email)" FontSize="12" Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"/>
-                    <TextBox Text="{Binding LoginText, Mode=TwoWay}" 
-                             PlaceholderText="Введите ваш логин..."
+                    <TextBlock Text="Логин" 
+                               FontSize="12" 
+                               Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"/>
+
+                    <TextBox Text="{Binding LoginText, Mode=TwoWay}"
                              Padding="10,8"/>
+
                 </StackPanel>
 
-                <!-- Поле Пароля -->
                 <StackPanel Spacing="5">
-                    <TextBlock Text="Пароль" FontSize="12" Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"/>
+                    <TextBlock Text="Пароль"
+                               FontSize="12" 
+                               Foreground="{DynamicResource SystemControlPageTextBaseMediumBrush}"/>
+
                     <TextBox Text="{Binding PasswordText, Mode=TwoWay}" 
-                             PasswordChar="●" 
-                             PlaceholderText="Введите ваш password..."
+                             PasswordChar="*"
                              Padding="10,8"/>
+
                 </StackPanel>
 
-                <!-- Сообщение об ошибке (берет системный красный цвет для ошибок) -->
                 <TextBlock Text="{Binding ErrorMessage}" 
                            Foreground="{DynamicResource SystemControlErrorTextForegroundBrush}" 
                            FontSize="12" 
@@ -54,7 +70,6 @@
                            TextWrapping="Wrap"
                            IsVisible="{Binding IsErrorVisible}"/>
 
-                <!-- Кнопка Войти (Класс accent покрасит её в системный цвет Accent) -->
                 <Button Content="Войти" 
                         Command="{Binding LoginCommand}"
                         Classes="accent"
