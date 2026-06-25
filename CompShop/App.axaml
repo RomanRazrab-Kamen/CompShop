@@ -1,7 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:CompShop.ViewModels"
-             xmlns:views="using:CompShop"
+             xmlns:views="using:CompShop.Views"
              x:Class="CompShop.App"
              xmlns:local="using:CompShop"
              RequestedThemeVariant="Default">
@@ -9,6 +9,10 @@
     <Application.DataTemplates>
         <DataTemplate DataType="{x:Type vm:CatalogViewModel}">
             <views:CatalogView />
+        </DataTemplate>
+        
+        <DataTemplate DataType="{x:Type vm:RepairsViewModel}">
+            <views:RepairsView />
         </DataTemplate>
     </Application.DataTemplates>
   
@@ -28,5 +32,5 @@
                     BaseLow="#E5E5E5"/>
             </FluentTheme.Palettes>
         </FluentTheme>
-    </Application.Styles>
+     </Application.Styles>
 </Application>

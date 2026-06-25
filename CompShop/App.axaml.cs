@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using CompShop.Models;
+using CompShop.Views;
 using CompShop.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -29,19 +30,22 @@ namespace CompShop
             serviceCollection.AddScoped<IComponentService, ComponentRepository>();
 
             // Сервисы
-
+            serviceCollection.AddSingleton<CompShop.Services.INavigationService, CompShop.Services.NavigationService>();
             serviceCollection.AddScoped<CompShop.Services.IAuthService, CompShop.Services.AuthService>();
             serviceCollection.AddSingleton<CompShop.Services.IWindowManagerService, CompShop.Services.WindowManagerService>();
 
             // Регистрация Окон и их ViewModel
             serviceCollection.AddTransient<AuthorizationViewModel>();
-            serviceCollection.AddTransient<AuthorizationWindow>(); // Окно авторизации
+            serviceCollection.AddTransient<AuthorizationWindow>();
 
             serviceCollection.AddTransient<MainWindowViewModel>();
-            serviceCollection.AddTransient<MainWindow>();         // Главное окно
+            serviceCollection.AddTransient<MainWindow>();
 
-            serviceCollection.AddTransient<CatalogViewModel>();   // Экран каталога для главного окна
+            serviceCollection.AddTransient<CatalogViewModel>();
             serviceCollection.AddTransient<CatalogView>();
+
+            serviceCollection.AddTransient<RepairsViewModel>();
+            serviceCollection.AddTransient<RepairsView>();
 
             Services = serviceCollection.BuildServiceProvider();
 
@@ -49,8 +53,7 @@ namespace CompShop
             {
                 var authWindow = Services.GetRequiredService<AuthorizationWindow>();
                 authWindow.DataContext = Services.GetRequiredService<AuthorizationViewModel>();
-
-                desktop.MainWindow = authWindow; // Назначаем его главным при старте
+                desktop.MainWindow = authWindow;
             }
 
             base.OnFrameworkInitializationCompleted();

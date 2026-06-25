@@ -2,6 +2,9 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Styling;
+using CompShop.ViewModels;
+using System;
+using System.Windows.Input;
 
 namespace CompShop.Windows
 {
@@ -11,11 +14,16 @@ namespace CompShop.Windows
         {
             InitializeComponent();
         }
+
         private void ThemeToggleButton_Click(object? sender, RoutedEventArgs e)
         {
-            var currentTheme = Application.Current!.RequestedThemeVariant;
-            Application.Current.RequestedThemeVariant =
-                currentTheme == ThemeVariant.Dark ? ThemeVariant.Light : ThemeVariant.Dark;
+            var app = Application.Current;
+            if (app != null)
+            {
+                app.RequestedThemeVariant = app.RequestedThemeVariant == ThemeVariant.Dark
+                    ? ThemeVariant.Light
+                    : ThemeVariant.Dark;
+            }
         }
     }
 }

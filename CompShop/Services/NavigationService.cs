@@ -1,42 +1,46 @@
-﻿using System;
-using CompShop.ViewModels;
+﻿using Avalonia.Controls;
+using System;
 
 namespace CompShop.Services
 {
     public interface INavigationService
     {
-        ViewModelBase? CurrentView { get; }
-        event Action? CurrentViewChanged;
-        void NavigateTo<TViewModel>() where TViewModel : ViewModelBase;
+        Control? CurrentView { get; }
+        void NavigateTo<TView, TViewModel>() where TView : Control where TViewModel : class;
     }
 
-    public class NavigationService : INavigationService
+    public class NavigationService : CompShop.ViewModels.ViewModelBase, INavigationService
     {
-        private readonly IServiceProvider _serviceProvider;
-        private ViewModelBase? _currentView;
+        private Control? _currentView;
 
-        public ViewModelBase? CurrentView
+        public Control? CurrentView
         {
             get => _currentView;
             private set
             {
                 _currentView = value;
-                CurrentViewChanged?.Invoke(); // Уведомляем окно о смене экрана
+                OnPropertyChanged(nameof(CurrentView));
             }
         }
-        public event Action? CurrentViewChanged;
 
-        // Конструктор получает доступ к DI чтобы создавать любые ViewModel
-        public NavigationService(IServiceProvider serviceProvider)
+        public void NavigateTo<TView, TViewModel>() where TView : Control where TViewModel : class
         {
-            _serviceProvider = serviceProvider;
-        }
+            try
+            {
+                var view = (App.Services?.GetService(typeof(TView)) ?? Activator.CreateInstance<TView>()) as Control;
 
-        // Метод для переключения на любой экран
-        public void NavigateTo<TViewModel>() where TViewModel : ViewModelBase
-        {
-            // Достаем нужную ViewModel из DI-контейнера со всеми её зависимостями и БД
-            CurrentView = (ViewModelBase)_serviceProvider.GetService(typeof(TViewModel))!;
+                var viewModel = App.Services?.GetService(typeof(TViewModel));
+
+                if (view != null && viewModel != null)
+                {
+                    view.DataContext = viewModel;
+                    CurrentView = view;
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[NavigationError] {ex.Message}");
+            }
         }
     }
 }

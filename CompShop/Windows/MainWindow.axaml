@@ -6,7 +6,7 @@
         x:DataType="vm:MainWindowViewModel"
         x:Class="CompShop.Windows.MainWindow"
         Title="Компьютерный магазин — Главная панель" 
-        Width="1100" Height="650"
+        Width="1200" Height="700"
         WindowStartupLocation="CenterScreen">
 
     <Grid RowDefinitions="Auto, *">
@@ -21,13 +21,80 @@
                 </StackPanel>
                 
                 <Button Grid.Column="1" 
-                        Content="🌓 Сменить тему" 
+                        Content="🌓" 
                         Padding="12,6" 
                         FontSize="12"
                         Click="ThemeToggleButton_Click"/> 
             </Grid>
         </Border>
 
-        <ContentControl Grid.Row="1" Content="{Binding CurrentPage}" />
+        <Grid Grid.Row="1" ColumnDefinitions="260, *">
+            
+            <Border Grid.Column="0" 
+                    Background="{DynamicResource SystemControlBackgroundChromeLowBrush}"
+                    BorderBrush="{DynamicResource SystemControlBorderRasterBrush}"
+                    BorderThickness="0,0,1,0"
+                    Padding="10,15,10,10">
+                
+                <ScrollViewer>
+                    <StackPanel Spacing="20">
+                        
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="НАВИГАЦИЯ" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SystemControlBackgroundBaseMediumBrush}" Margin="5,0,0,5"/>
+                            
+                            <Button Content="Каталог компонентов" 
+                                    Command="{Binding NavigateToCatalogCommand}"
+                                    HorizontalAlignment="Stretch" 
+                                    HorizontalContentAlignment="Left" 
+                                    Padding="12,8" 
+                                    />
+                            
+                            <Button Content="Активные ремонты" 
+                                    Command="{Binding NavigateToRepairsCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Left"
+                                    Padding="12,8"
+                                    />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="КОМПЛЕКТУЮЩИЕ" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SystemControlBackgroundBaseMediumBrush}" Margin="5,0,0,5"/>
+                            
+                            <Button Content="Добавить компонент" 
+                                    Command="{Binding AddComponentCommand}"
+                                    HorizontalAlignment="Stretch" 
+                                    HorizontalContentAlignment="Left" 
+                                    Padding="12,8"
+                                    IsVisible="{Binding CanModifyCatalog}"/>
+                                    
+                            <Button Content="Изменить компонент" 
+                                    Command="{Binding EditComponentCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    HorizontalContentAlignment="Left" 
+                                    Padding="12,8"
+                                    IsVisible="{Binding CanModifyCatalog}"/>
+                                    
+                            <Button Content="Удалить компонент" 
+                                    Command="{Binding DeleteComponentCommand}"
+                                    HorizontalAlignment="Stretch" 
+                                    HorizontalContentAlignment="Left" 
+                                    Padding="12,8"
+                                    IsVisible="{Binding CanModifyCatalog}"/>
+                        </StackPanel>
+
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="АНАЛИТИКА" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SystemControlBackgroundBaseMediumBrush}" Margin="5,0,0,5"/>
+                            <Button Content="📊 Отчет по складу" 
+                                    Command="{Binding OpenReportCommand}"
+                                    HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12,8" Background="Transparent"/>
+                        </StackPanel>
+                        
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <ContentControl Grid.Column="1" Content="{Binding Navigation.CurrentView}" />
+            
+        </Grid>
     </Grid>
 </Window>

@@ -6,7 +6,13 @@ namespace CompShop.Models;
 public partial class Employee
 {
     public int Id { get; set; }
-
+    public string FullName 
+    {
+        get
+        {
+           return $"{FirstName} {MiddleName} {LastName}";
+        }   
+    }
     public string LastName { get; set; } = null!;
 
     public string FirstName { get; set; } = null!;

@@ -1,0 +1,51 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" 
+        xmlns:vm="using:CompShop.ViewModels"
+        xmlns:models="using:CompShop.Models"
+        x:DataType="vm:AddComponentViewModel"
+        d:DesignWidth="800" 
+        d:DesignHeight="450"
+        x:Class="CompShop.Windows.AddComponentWindow"
+        Title="Добавление нового компонента">
+    <Border Padding="20">
+        <StackPanel Spacing="15">
+            <TextBlock Text="Новый компонент" FontSize="18" FontWeight="Bold"/>
+
+            <StackPanel Spacing="5">
+                <TextBlock Text="Наименование / Модель" FontSize="12"/>
+                <TextBox Text="{Binding ComponentName, Mode=TwoWay}" PlaceholderText="Например, Intel Core i5-12400F"/>
+            </StackPanel>
+
+            <StackPanel Spacing="5">
+                <TextBlock Text="Цена (руб.)" FontSize="12"/>
+                <NumericUpDown Value="{Binding Price, Mode=TwoWay}" Minimum="0" Increment="500"/>
+            </StackPanel>
+
+            <StackPanel Spacing="5">
+                <TextBlock Text="Категория" FontSize="12"/>
+                <ComboBox ItemsSource="{Binding Categories}"
+                          SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+                          HorizontalAlignment="Stretch">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="models:Category">
+                            <TextBlock Text="{Binding CategoryName}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <Grid ColumnDefinitions="*, *" Margin="0,10,0,0" ColumnSpacing="10">
+                <Button Grid.Column="0" Content="Сохранить" 
+                        Command="{Binding SaveCommand}"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"/>
+                <Button Grid.Column="1" Content="Отмена" 
+                        Click="CancelButton_Click"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center"
+                        Background="Transparent"/>
+            </Grid>
+        </StackPanel>
+    </Border>
+</Window>

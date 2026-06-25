@@ -1,0 +1,81 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CompShop.ViewModels"
+             xmlns:models="using:CompShop.Models"
+             x:DataType="vm:RepairsViewModel"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="650"
+             x:Class="CompShop.Views.RepairsView"
+             xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid">
+
+    <Grid RowDefinitions="Auto, *" Margin="20">
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
+            <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
+                <TextBlock Text="Активные ремонты" FontSize="18" FontWeight="Bold"/>
+                
+                <ComboBox Width="150" PlaceholderText="Все статусы"
+                          SelectedIndex="{Binding SelectedStatusIndex, Mode=TwoWay}">
+                    <ComboBoxItem Content="Все ремонты"/>
+                    <ComboBoxItem Content="В работе"/>
+                    <ComboBoxItem Content="Готов"/>
+                </ComboBox>
+            </StackPanel>
+            
+            <Button Grid.Column="1" Content="Отметить как готов" 
+                    Command="{Binding MarkAsReadyCommand}"
+                    Padding="12,6" Classes="accent"/>
+        </Grid>
+
+        <Grid Grid.Row="1" RowDefinitions="*, Auto">
+            
+            <DataGrid Grid.Row="0" 
+                      ItemsSource="{Binding Repairs}"
+                      SelectedItem="{Binding SelectedRepair, Mode=TwoWay}"
+                      AutoGenerateColumns="False"
+                      IsReadOnly="True"
+                      GridLinesVisibility="All"
+                      BorderThickness="1"
+                      BorderBrush="{DynamicResource SystemControlBorderRasterBrush}">
+                      
+                <DataGrid.Columns>
+                    <dg:DataGridTextColumn Header="№ Заказа" Binding="{Binding Id}" Width="90"/>
+                    <dg:DataGridTextColumn Header="Устройство" Binding="{Binding DeviceName}" Width="150"/>
+                    <dg:DataGridTextColumn Header="Менеджер" Binding="{Binding Manager.FullName}" Width="150"/>
+                    <dg:DataGridTextColumn Header="Мастер" Binding="{Binding Master.FullName}" Width="150"/>
+                    <dg:DataGridTextColumn Header="Неисправность" Binding="{Binding ProblemDescription}" Width="*"/>
+                    <dg:DataGridTextColumn Header="Дата приема" Binding="{Binding DateReceived, StringFormat=\{0:dd.MM.yyyy\}}" Width="120"/>
+                    <dg:DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="100"/>
+                    <dg:DataGridTextColumn Header="Стоимость (руб.)" Binding="{Binding TotalCost, StringFormat='{}{0:N0} ₽'}" Width="130"/>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <Border Grid.Row="1" 
+                    Margin="0,15,0,0" 
+                    Padding="15" 
+                    Background="{DynamicResource SystemControlBackgroundChromeLowBrush}"
+                    BorderBrush="{DynamicResource SystemControlBorderRasterBrush}"
+                    BorderThickness="1" 
+                    CornerRadius="6"
+                    IsVisible="{Binding IsDetailsVisible}">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="📦 Использованные комплектующие для этого заказа:" 
+                               FontWeight="SemiBold" FontSize="14"/>
+                    
+                    <ListBox ItemsSource="{Binding SelectedRepairComponents}" Background="Transparent">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate x:DataType="models:RepairComponentDetail">
+                                <Grid ColumnDefinitions="*, Auto, Auto" Width="600">
+                                    <TextBlock Grid.Column="0" Text="{Binding Component.ComponentName}" FontWeight="Medium"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Quantity, StringFormat='{}{0} шт.'}" Margin="20,0" Foreground="Gray"/>
+                                    <TextBlock Grid.Column="2" Text="{Binding FixedPrice, StringFormat='{}{0:N0} ₽'}" FontWeight="SemiBold"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+            
+        </Grid>
+    </Grid>
+</UserControl>

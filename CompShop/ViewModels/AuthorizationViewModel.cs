@@ -1,8 +1,9 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
+using CommunityToolkit.Mvvm.Input;
 using CompShop.Services;
 using CompShop.Windows;
 using System;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CompShop.ViewModels
@@ -10,11 +11,16 @@ namespace CompShop.ViewModels
     public class AuthorizationViewModel : ViewModelBase
     {
         private readonly IAuthService _authService;
-        private readonly IWindowManagerService _windowManager;
-
         private string _loginText = string.Empty;
         private string _passwordText = string.Empty;
         private string _errorMessage = string.Empty;
+        private bool _isErrorVisible;
+
+        public AuthorizationViewModel(IAuthService authService)
+        {
+            _authService = authService;
+            LoginCommand = new RelayCommand(ExecuteLogin);
+        }
 
         public string LoginText
         {
@@ -31,51 +37,55 @@ namespace CompShop.ViewModels
         public string ErrorMessage
         {
             get => _errorMessage;
-            set
-            {
-                _errorMessage = value;
-                OnPropertyChanged(nameof(ErrorMessage));
-                OnPropertyChanged(nameof(IsErrorVisible));
-            }
+            set { _errorMessage = value; OnPropertyChanged(nameof(ErrorMessage)); }
         }
 
-        public bool IsErrorVisible => !string.IsNullOrEmpty(ErrorMessage);
+        public bool IsErrorVisible
+        {
+            get => _isErrorVisible;
+            set { _isErrorVisible = value; OnPropertyChanged(nameof(IsErrorVisible)); }
+        }
 
         public ICommand LoginCommand { get; }
 
-        public AuthorizationViewModel(IAuthService authService, IWindowManagerService windowManager)
-        {
-            _authService = authService;
-            _windowManager = windowManager;
-            LoginCommand = new AsyncRelayCommand(OnLoginExecuteAsync);
-        }
-
-        private async Task OnLoginExecuteAsync()
+        private async void ExecuteLogin()
         {
             if (string.IsNullOrWhiteSpace(LoginText) || string.IsNullOrWhiteSpace(PasswordText))
             {
-                ErrorMessage = "Пожалуйста, заполните все поля.";
+                ErrorMessage = "Заполните все поля ввода!";
+                IsErrorVisible = true;
                 return;
             }
 
-            try
+            var employee = await _authService.ValidateUserAsync(LoginText, PasswordText);
+
+            if (employee != null)
             {
-                var employee = await _authService.ValidateUserAsync(LoginText, PasswordText);
+                AppState.CurrentUser = employee;
+                IsErrorVisible = false;
 
-                if (employee != null)
+                var lifetime = Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime;
+                if (lifetime != null)
                 {
-                    ErrorMessage = string.Empty;
+                    var mainWindow = App.Services?.GetService(typeof(MainWindow)) as MainWindow;
+                    var mainViewModel = App.Services?.GetService(typeof(MainWindowViewModel)) as MainWindowViewModel;
 
-                    _windowManager.CloseCurrentAndOpen<MainWindow, MainWindowViewModel>();
-                }
-                else
-                {
-                    ErrorMessage = "Неверный логин или пароль!";
+                    if (mainWindow != null && mainViewModel != null)
+                    {
+                        mainWindow.DataContext = mainViewModel;
+
+                        var oldAuthWindow = lifetime.MainWindow;
+                        lifetime.MainWindow = mainWindow;
+
+                        mainWindow.Show();
+                        oldAuthWindow?.Close();
+                    }
                 }
             }
-            catch (Exception ex)
+            else
             {
-                ErrorMessage = $"Ошибка сети: {ex.Message}";
+                ErrorMessage = "Неверный логин или пароль!";
+                IsErrorVisible = true;
             }
         }
     }
