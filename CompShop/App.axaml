@@ -7,11 +7,11 @@
              RequestedThemeVariant="Default">
              
     <Application.DataTemplates>
-        <DataTemplate DataType="{x:Type vm:CatalogViewModel}">
+        <DataTemplate DataType="vm:CatalogViewModel">
             <views:CatalogView />
         </DataTemplate>
         
-        <DataTemplate DataType="{x:Type vm:RepairsViewModel}">
+        <DataTemplate DataType="vm:RepairsViewModel">
             <views:RepairsView />
         </DataTemplate>
     </Application.DataTemplates>
@@ -20,17 +20,19 @@
         <FluentTheme>
             <FluentTheme.Palettes>
                 <ColorPaletteResources x:Key="Dark" 
-                    Accent="#00009F" 
-                    RegionColor="#363636"  
-                    BaseHigh="#FFFFFF"
-                    BaseLow="#2C2C2E" />
+                                       Accent="#00009F" 
+                                       RegionColor="#363636"  
+                                       BaseHigh="#FFFFFF"
+                                       BaseLow="#2C2C2E" />
                 
                 <ColorPaletteResources x:Key="Light" 
-                    Accent="#007AFF" 
-                    RegionColor="#FFFFFF"
-                    BaseHigh="#000000"
-                    BaseLow="#E5E5E5"/>
+                                       Accent="#007AFF" 
+                                       RegionColor="#FFFFFF"
+                                       BaseHigh="#000000"
+                                       BaseLow="#E5E5E5"/>
             </FluentTheme.Palettes>
         </FluentTheme>
+        
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml"/>
      </Application.Styles>
 </Application>

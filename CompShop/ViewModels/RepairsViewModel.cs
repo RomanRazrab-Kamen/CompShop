@@ -18,9 +18,11 @@ namespace CompShop.ViewModels
 
         public ObservableCollection<Repair> Repairs { get; } = new();
         public ObservableCollection<RepairComponentDetail> SelectedRepairComponents { get; } = new();
+        public ICommand ExportReceiptCommand { get; }
 
         public RepairsViewModel()
         {
+            ExportReceiptCommand = new RepairsRelayCommand(ExecuteExportReceipt);
             MarkAsReadyCommand = new RepairsRelayCommand(ExecuteMarkAsReady);
             _ = LoadRepairsAsync();
         }
@@ -73,34 +75,64 @@ namespace CompShop.ViewModels
             {
                 using (var db = new CompShopDbContext())
                 {
-                    _allRepairs = await db.Set<Repair>()
+                    var dataFromDb = await db.Repairs
                         .AsNoTracking()
                         .Include(r => r.Manager)
                         .Include(r => r.Master)
                         .OrderByDescending(r => r.DateReceived)
                         .ToListAsync();
+
+                    _allRepairs = dataFromDb ?? new List<Repair>();
                 }
+
                 ApplyFilter();
+
+                System.Diagnostics.Debug.WriteLine($"[CompShop] Из БД успешно загружено ремонтов: {_allRepairs.Count} шт.");
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"[CompShop] Ошибка загрузки ремонтов: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    System.Diagnostics.Debug.WriteLine($"[CompShop] Причина из СУБД: {ex.InnerException.Message}");
+                }
             }
         }
 
+
         private void ApplyFilter()
         {
+            if (_allRepairs == null || !_allRepairs.Any())
+            {
+                Repairs.Clear();
+                return;
+            }
+
             IEnumerable<Repair> filtered = _allRepairs;
 
-            if (SelectedStatusIndex == 1)
-                filtered = filtered.Where(r => r.Status.StatusName == "В работе");
-            else if (SelectedStatusIndex == 2)
-                filtered = filtered.Where(r => r.Status.StatusName == "Готов");
+            if (SelectedStatusIndex == 1) // В работе
+            {
+                filtered = filtered.Where(r => r.Status != null &&
+                    r.Status.StatusName.Trim().Equals("В работе", StringComparison.OrdinalIgnoreCase));
+            }
+            else if (SelectedStatusIndex == 2) // Готов
+            {
+                filtered = filtered.Where(r => r.Status != null &&
+                    r.Status.StatusName.Trim().Equals("Готов", StringComparison.OrdinalIgnoreCase));
+            }
 
             Repairs.Clear();
             foreach (var repair in filtered)
             {
                 Repairs.Add(repair);
+            }
+
+            System.Diagnostics.Debug.WriteLine($"[CompShop] Фильтр применен. Индекс ComboBox: {SelectedStatusIndex}. На экран отправлено строк: {Repairs.Count} из {_allRepairs.Count}");
+
+            if (Repairs.Count == 0 && _allRepairs.Count > 0)
+            {
+                var firstRepair = _allRepairs.First();
+                System.Diagnostics.Debug.WriteLine($"[CompShop] ВНИМАНИЕ: Запись скрыта фильтром! ID={firstRepair.Id}, Текущий статус в БД = '{firstRepair.Status}'");
             }
         }
 
@@ -162,6 +194,55 @@ namespace CompShop.ViewModels
                 System.Diagnostics.Debug.WriteLine($"[CompShop] Ошибка смены статуса: {ex.Message}");
             }
         }
+        private void ExecuteExportReceipt()
+        {
+            if (SelectedRepair == null || !SelectedRepairComponents.Any()) return;
+
+            try
+            {
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string fileName = $"Receipt_Order_{SelectedRepair.Id}.txt";
+                string fullPath = System.IO.Path.Combine(desktopPath, fileName);
+
+                using (var writer = new System.IO.StreamWriter(fullPath, false, System.Text.Encoding.UTF8))
+                {
+                    writer.WriteLine("==========================================");
+                    writer.WriteLine("          СЕРВИСНЫЙ ЦЕНТР COMPSHOP        ");
+                    writer.WriteLine("==========================================");
+                    writer.WriteLine($" КВИТАНЦИЯ К ЗАКАЗУ НА РЕМОНТ № {SelectedRepair.Id}");
+                    writer.WriteLine($" Дата печати: {DateTime.Now:dd.MM.yyyy HH:mm}");
+                    writer.WriteLine($" Устройство:  {SelectedRepair.DeviceName}");
+                    writer.WriteLine("------------------------------------------");
+                    writer.WriteLine(" НАИМЕНОВАНИЕ         КОЛ-ВО      СТОИМОСТЬ");
+                    writer.WriteLine("------------------------------------------");
+
+                    decimal totalComponentsCost = 0;
+                    foreach (var detail in SelectedRepairComponents)
+                    {
+                        string name = detail.Component?.ComponentName ?? "Неизвестная деталь";
+                        if (name.Length > 20) name = name.Substring(0, 17) + "...";
+
+                        decimal cost = detail.Quantity * detail.FixedPrice;
+                        totalComponentsCost += cost;
+
+                        writer.WriteLine($"{name.PadRight(20)} {detail.Quantity.ToString().PadRight(6)} {cost:N0} ₽");
+                    }
+
+                    writer.WriteLine("------------------------------------------");
+                    writer.WriteLine($" ИТОГО ЗА ДЕТАЛИ:             {totalComponentsCost:N0} ₽");
+                    writer.WriteLine($" СТОИМОСТЬ ЗАКАЗА (ОБЩАЯ):     {SelectedRepair.TotalCost:N0} ₽");
+                    writer.WriteLine("==========================================");
+                }
+
+                var psi = new System.Diagnostics.ProcessStartInfo(fullPath) { UseShellExecute = true };
+                System.Diagnostics.Process.Start(psi);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[CompShop] Ошибка печати чека: {ex.Message}");
+            }
+        }
+
     }
 
     public class RepairsRelayCommand : ICommand

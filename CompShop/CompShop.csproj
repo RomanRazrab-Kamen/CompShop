@@ -12,30 +12,36 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Avalonia" Version="12.0.5" />
-		<PackageReference Include="Avalonia.Desktop" Version="12.0.5" />
-		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.5" />
-		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.5" />
+		<PackageReference Include="Avalonia" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.0" />
+		<PackageReference Include="Avalonia.Desktop" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="12.0.3" />
+		<PackageReference Include="Avalonia.Fonts.Inter" Version="12.0.3" />
 
-		<PackageReference Include="Avalonia.Controls.DataGrid" Version="12.0.1" />
-
-		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.2">
+		<PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1">
 			<IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
 			<PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
 		</PackageReference>
 
+		<PackageReference Include="MessageBox.Avalonia" Version="12.0.0" />
+
+		<PackageReference Include="BCrypt.Net-Next" Version="4.2.0" />
+
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.1" />
 
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+		<PackageReference Include="itext.bouncy-castle-adapter" Version="9.6.0" />
+		<PackageReference Include="itext7" Version="9.6.0" />
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.8" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.0">
+
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.8">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
 	</ItemGroup>
 </Project>

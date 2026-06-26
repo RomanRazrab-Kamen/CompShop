@@ -1,0 +1,51 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:CompShop.ViewModels"
+             x:DataType="vm:ReportViewModel"
+             mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="600"
+             x:Class="CompShop.Views.ReportView"
+             xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid">
+
+    <Grid RowDefinitions="Auto, *" Margin="20">
+        
+        <Border Grid.Row="0" 
+                Background="{DynamicResource SystemControlBackgroundChromeLowBrush}" 
+                Padding="15" 
+                CornerRadius="6" 
+                Margin="0,0,0,20"
+                BorderBrush="{DynamicResource SystemControlBorderRasterBrush}"
+                BorderThickness="1">
+            <Grid ColumnDefinitions="*, Auto">
+                <StackPanel Grid.Column="0" Spacing="5">
+                    <TextBlock Text="Аналитика складских остатков" FontSize="18" FontWeight="Bold"/>
+                    <TextBlock Text="Сводный финансовый учет компонентов по точкам хранения" FontSize="12" Foreground="Gray"/>
+                </StackPanel>
+                
+                <TextBlock Grid.Column="1" 
+                           Text="{Binding GrandTotalText}" 
+                           FontSize="14" 
+                           FontWeight="SemiBold" 
+                           VerticalAlignment="Center" 
+                           Foreground="{DynamicResource SystemControlHighlightAccentBrush}"/>
+            </Grid>
+        </Border>
+
+        <DataGrid Grid.Row="1" 
+                  ItemsSource="{Binding WarehouseReports}" 
+                  AutoGenerateColumns="False" 
+                  IsReadOnly="True" 
+                  GridLinesVisibility="All"
+                  BorderThickness="1"
+                  BorderBrush="{DynamicResource SystemControlBorderRasterBrush}">
+            <DataGrid.Columns>
+                <dg:DataGridTextColumn Header="Склад / Точка хранения" Binding="{Binding WarehouseName}" Width="*"/>
+                <dg:DataGridTextColumn Header="Уникальных позиций" Binding="{Binding UniqueItemsCount}" Width="180"/>
+                <dg:DataGridTextColumn Header="Общее кол-во (шт)" Binding="{Binding TotalQuantity}" Width="180"/>
+                <dg:DataGridTextColumn Header="Стоимость остатков (руб)" Binding="{Binding TotalValue, StringFormat='{}{0:N0} ₽'}" Width="220"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+    </Grid>
+</UserControl>

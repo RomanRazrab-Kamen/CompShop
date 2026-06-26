@@ -34,11 +34,13 @@ namespace CompShop.ViewModels
             DeleteComponentCommand = new RelayCommand(ExecuteDeleteComponent);
             OpenReportCommand = new RelayCommand(ExecuteOpenReport);
 
-            Navigation.NavigateTo<CompShop.Views.CatalogView, CatalogViewModel>();
+            //Navigation.NavigateTo<CompShop.Views.CatalogView, CatalogViewModel>();
         }
 
         private void ExecuteOpenReport()
         {
+            Navigation.NavigateTo<CompShop.Views.ReportView, ReportViewModel>();
+            System.Diagnostics.Debug.WriteLine("[CompShop] Переключение на Аналитический отчет по складам");
         }
 
         private async void ExecuteAddComponent()

@@ -84,7 +84,7 @@
 
                         <StackPanel Spacing="5">
                             <TextBlock Text="АНАЛИТИКА" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SystemControlBackgroundBaseMediumBrush}" Margin="5,0,0,5"/>
-                            <Button Content="📊 Отчет по складу" 
+                            <Button Content="Отчет по складу" 
                                     Command="{Binding OpenReportCommand}"
                                     HorizontalAlignment="Stretch" HorizontalContentAlignment="Left" Padding="12,8" Background="Transparent"/>
                         </StackPanel>

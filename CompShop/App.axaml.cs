@@ -47,6 +47,9 @@ namespace CompShop
             serviceCollection.AddTransient<RepairsViewModel>();
             serviceCollection.AddTransient<RepairsView>();
 
+            serviceCollection.AddTransient<ReportViewModel>();
+            serviceCollection.AddTransient<ReportView>();
+
             Services = serviceCollection.BuildServiceProvider();
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)

@@ -9,7 +9,7 @@
              x:Class="CompShop.Views.RepairsView"
              xmlns:dg="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls.DataGrid">
 
-    <Grid RowDefinitions="Auto, *" Margin="20">
+     <Grid RowDefinitions="Auto, *" Margin="20">
         <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,15">
             <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="15" VerticalAlignment="Center">
                 <TextBlock Text="Активные ремонты" FontSize="18" FontWeight="Bold"/>
@@ -27,7 +27,8 @@
                     Padding="12,6" Classes="accent"/>
         </Grid>
 
-        <Grid Grid.Row="1" RowDefinitions="*, Auto">
+        <!-- Рабочая область -->
+        <Grid Grid.Row="1" RowDefinitions="*, Auto" VerticalAlignment="Stretch">
             
             <DataGrid Grid.Row="0" 
                       ItemsSource="{Binding Repairs}"
@@ -36,20 +37,22 @@
                       IsReadOnly="True"
                       GridLinesVisibility="All"
                       BorderThickness="1"
-                      BorderBrush="{DynamicResource SystemControlBorderRasterBrush}">
-                      
+                      BorderBrush="{DynamicResource SystemControlBorderRasterBrush}"
+                      VerticalAlignment="Stretch"
+                      MinHeight="300">
                 <DataGrid.Columns>
                     <dg:DataGridTextColumn Header="№ Заказа" Binding="{Binding Id}" Width="90"/>
                     <dg:DataGridTextColumn Header="Устройство" Binding="{Binding DeviceName}" Width="150"/>
-                    <dg:DataGridTextColumn Header="Менеджер" Binding="{Binding Manager.FullName}" Width="150"/>
-                    <dg:DataGridTextColumn Header="Мастер" Binding="{Binding Master.FullName}" Width="150"/>
+                    <dg:DataGridTextColumn Header="Менеджер" Binding="{Binding Manager.FullName, FallbackValue='—'}" Width="150"/>
+                    <dg:DataGridTextColumn Header="Мастер" Binding="{Binding Master.FullName, FallbackValue='—'}" Width="150"/>
                     <dg:DataGridTextColumn Header="Неисправность" Binding="{Binding ProblemDescription}" Width="*"/>
                     <dg:DataGridTextColumn Header="Дата приема" Binding="{Binding DateReceived, StringFormat=\{0:dd.MM.yyyy\}}" Width="120"/>
-                    <dg:DataGridTextColumn Header="Статус" Binding="{Binding Status}" Width="100"/>
+                    <dg:DataGridTextColumn Header="Статус" Binding="{Binding Status.StatusName}" Width="100"/>
                     <dg:DataGridTextColumn Header="Стоимость (руб.)" Binding="{Binding TotalCost, StringFormat='{}{0:N0} ₽'}" Width="130"/>
                 </DataGrid.Columns>
             </DataGrid>
 
+            <!-- Панель детализации запчастей -->
             <Border Grid.Row="1" 
                     Margin="0,15,0,0" 
                     Padding="15" 
@@ -59,8 +62,16 @@
                     CornerRadius="6"
                     IsVisible="{Binding IsDetailsVisible}">
                 <StackPanel Spacing="10">
-                    <TextBlock Text="📦 Использованные комплектующие для этого заказа:" 
-                               FontWeight="SemiBold" FontSize="14"/>
+                    <Grid ColumnDefinitions="*, Auto">
+                        <TextBlock Grid.Column="0" 
+                                   Text="Использованные комплектующие для этого заказа:" 
+                                   FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center"/>
+                        
+                        <Button Grid.Column="1" 
+                                Content="Распечатать чек" 
+                                Command="{Binding ExportReceiptCommand}"
+                                Padding="10,5" FontSize="12"/>
+                    </Grid>
                     
                     <ListBox ItemsSource="{Binding SelectedRepairComponents}" Background="Transparent">
                         <ListBox.ItemTemplate>
@@ -75,7 +86,6 @@
                     </ListBox>
                 </StackPanel>
             </Border>
-            
         </Grid>
     </Grid>
 </UserControl>
